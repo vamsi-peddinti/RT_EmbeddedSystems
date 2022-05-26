@@ -4,7 +4,7 @@
 #include <sched.h>
 #include <syslog.h>
 
-#define NUM_THREADS 12
+#define NUM_THREADS 16
 
 typedef struct
 {
@@ -36,7 +36,6 @@ int main (int argc, char *argv[])
 {
    int rc;
    int i;
-
    for(i=0; i < NUM_THREADS; i++)
    {
        threadParams[i].threadIdx=i;
