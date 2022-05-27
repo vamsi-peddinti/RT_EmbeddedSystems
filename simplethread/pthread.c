@@ -4,52 +4,34 @@
 #include <sched.h>
 #include <syslog.h>
 
-#define NUM_THREADS 16
-
 typedef struct
 {
-    int threadIdx;
+   int threadIdx;
 } threadParams_t;
 
+pthread_t threads[1];
+threadParams_t threadParams[1];
 
-// POSIX thread declarations and scheduling attributes
-//
-pthread_t threads[NUM_THREADS];
-threadParams_t threadParams[NUM_THREADS];
-
-
-void *counterThread(void *threadp)
+void *pthread(void *threadp) 
 {
-    int sum=0, i;
-    threadParams_t *threadParams = (threadParams_t *)threadp;
-
-    for(i=1; i < (threadParams->threadIdx)+1; i++)
-        sum=sum+i;
- 
-    printf("Thread idx=%d, sum[0...%d]=%d\n", 
-           threadParams->threadIdx,
-           threadParams->threadIdx, sum);
+   syslog(LOG_INFO, "[COURSE:5623][ASSIGNMENT:1] Hello World from Thread!\n");
 }
-
 
 int main (int argc, char *argv[])
 {
    int rc;
-   int i;
-   for(i=0; i < NUM_THREADS; i++)
-   {
-       threadParams[i].threadIdx=i;
+   int i = 0;
 
-       pthread_create(&threads[i],   // pointer to thread descriptor
-                      (void *)0,     // use default attributes
-                      counterThread, // thread function entry point
-                      (void *)&(threadParams[i]) // parameters to pass in
-                     );
+   syslog(LOG_INFO, "[COURSE:5623][ASSIGNMENT:1] Hello World from Main!\n");
 
-   }
+   threadParams[i].threadIdx = i;
+   pthread_create(&threads[i],
+		  (void *)0, 
+		  pthread, 
+		  (void *)&(threadParams[i])
+		 );
 
-   for(i=0;i<NUM_THREADS;i++)
-       pthread_join(threads[i], NULL);
-
-   printf("TEST COMPLETE\n");
+   pthread_join(threads[i], NULL);
+   
+   closelog();
 }
